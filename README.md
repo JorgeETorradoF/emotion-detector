@@ -4,7 +4,7 @@
 ```bash
     python -m venv <nombre de su entorno virtual (no use tildes ni espacios de preferencia, dejelo suave)>
 ```
-## 2. Cambie al entorno virtual:
+## 2. Cambie al entorno virtual (si aplicó el paso 1):
 ```bash
     <nombre de su entorno virtual>\Scripts\activate
 ```
