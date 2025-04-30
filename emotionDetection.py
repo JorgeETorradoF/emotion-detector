@@ -19,15 +19,19 @@ while True:
         break
 
     try:
-        # Analizar emoción en el frame actual
+        #Lo pasamos a escala de grises y luego a RGB
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        rgb_frame = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2RGB)
+        
+        # Analizamos emoción en el frame actual con el Deepface
         result = DeepFace.analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='yolov8',align=True)
 
-        # Obtener coordenadas del rostro y emoción dominante
+        # Enmarcamos el rostro y sacamos la emoción dominante (la de más puntaje)
         face_region = result[0]['region']
         x, y, w, h = face_region['x'], face_region['y'], face_region['w'], face_region['h']
         emocion = obtener_emocion_dominante(result)
 
-        # Dibujar rectángulo (verde)
+        # Dibujamos rectángulo (verde)
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         # Dibujar el texto con la emoción (ajustar posición si es necesario)
