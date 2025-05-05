@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 def obtener_emocion_dominante(result):
-    return result[0]['dominant_emotion']
+    return result['dominant_emotion']
 
 # Iniciar cámara
 cap = cv2.VideoCapture(0)
@@ -19,23 +19,27 @@ while True:
         break
 
     try:
-        #Lo pasamos a escala de grises y luego a RGB
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        rgb_frame = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2RGB)
-        
-        # Analizamos emoción en el frame actual con el Deepface
-        result = DeepFace.analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='yolov8',align=True)
+        # Analizar emociones en el frame completo
+        results = DeepFace.analyze(
+            frame,
+            actions=['emotion'],
+            enforce_detection=False,
+            detector_backend='yolov8',
+            align=True
+        )
 
-        # Enmarcamos el rostro y sacamos la emoción dominante (la de más puntaje)
-        face_region = result[0]['region']
-        x, y, w, h = face_region['x'], face_region['y'], face_region['w'], face_region['h']
-        emocion = obtener_emocion_dominante(result)
+        # Si solo devuelve un dict, lo convertimos en lista
+        if not isinstance(results, list):
+            results = [results]
 
-        # Dibujamos rectángulo (verde)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        for result in results:
+            face_region = result['region']
+            x, y, w, h = face_region['x'], face_region['y'], face_region['w'], face_region['h']
+            emocion = obtener_emocion_dominante(result)
 
-        # Dibujar el texto con la emoción (ajustar posición si es necesario)
-        cv2.putText(frame, emocion, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
+            # Dibujar rectángulo y emoción
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.putText(frame, emocion, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
 
     except Exception as e:
         print("Error:", e)
