@@ -1,3 +1,4 @@
-compose.yml
-Dockerfile
 proyectoNumerico/
+deepface/
+Data/
+deepface_finetuning/
