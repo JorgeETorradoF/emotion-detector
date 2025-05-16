@@ -1,14 +1,16 @@
 import cv2
+import os
 from tensorflow.keras.models import model_from_json 
 import numpy as np
 
 
-json_file = open("demos/emotiondetector.json", "r")
-model_json = json_file.read()
-json_file.close()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(BASE_DIR, "emotiondetector.json"), "r") as json_file:
+    model_json = json_file.read()
 model = model_from_json(model_json)
 
-model.load_weights("Modeloentrenado.h5")
+model.load_weights(os.path.join(BASE_DIR, "Modeloentrenado.h5"))
 
 
 haar_file = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
