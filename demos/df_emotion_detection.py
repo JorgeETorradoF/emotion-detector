@@ -1,18 +1,11 @@
+from deepface import DeepFace
 import cv2
 import numpy as np
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array
 
-# Cargamos el modelo entrenado
-model = load_model("best_tuned_model.h5")
+def obtener_emocion_dominante(result):
+    return result['dominant_emotion']
 
-# Las clases deben coincidir con las usadas al entrenar
-class_labels = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
-
-# Cargamos el clasificador Haar Cascade para detección de rostros
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-
-# Captura desde webcam
+# Iniciar cámara
 cap = cv2.VideoCapture(0)
 
 if not cap.isOpened():
@@ -25,36 +18,38 @@ while True:
     if not ret:
         break
 
-    # Convertimos a escala de grises para la detección con Haar
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    try:
+        # Analizar emociones en el frame completo
+        results = DeepFace.analyze(
+            frame,
+            actions=['emotion'],
+            enforce_detection=False,
+            detector_backend='yolov8',
+            align=True
+        )
 
-    # Detectamos rostros
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+        # Si solo devuelve un dict, lo convertimos en lista
+        if not isinstance(results, list):
+            results = [results]
 
-    for (x, y, w, h) in faces:
-        # Se extrae el rostro, luego se redimensiona y normaliza antes de darselo a deepface para que analice
-        face_roi = gray[y:y+h, x:x+w]
-        face_roi = cv2.resize(face_roi, (48, 48))
-        face_roi = face_roi.astype("float32") / 255.0
-        face_roi = img_to_array(face_roi)
-        face_roi = np.expand_dims(face_roi, axis=0)
-        face_roi = np.expand_dims(face_roi, axis=-1)
+        for result in results:
+            face_region = result['region']
+            x, y, w, h = face_region['x'], face_region['y'], face_region['w'], face_region['h']
+            emocion = obtener_emocion_dominante(result)
 
-        # Predicción de emoción
-        preds = model.predict(face_roi)
-        emotion_label = class_labels[np.argmax(preds)]
+            # Dibujar rectángulo y emoción
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.putText(frame, emocion, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
 
-        # Dibujamos los resultados en el frame
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(frame, emotion_label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
+    except Exception as e:
+        print("Error:", e)
 
-    # Se muestra el frame
-    cv2.imshow("Detección de Emociones", frame)
+    # Mostrar frame
+    cv2.imshow('Detección de Emociones', frame)
 
     # Salir con 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Liberar recursos
 cap.release()
 cv2.destroyAllWindows()
