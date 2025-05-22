@@ -8,7 +8,7 @@ model_json = json_file.read()
 json_file.close()
 model = model_from_json(model_json)
 
-model.load_weights("Modeloentrenado.h5")
+model.load_weights("CNN_casera.h5")
 
 
 haar_file = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
