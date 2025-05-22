@@ -11,11 +11,13 @@
 
 ## 3. Instale:
 ```bash
-pip install deepface opencv-python tensorflow keras
-pip install tf-keras
-pip install ultralytics
+pip install -r requirements.txt
 ```
-## 4. Ejecute:
+## 4. Entre a la carpeta de demos:
 ```bash
-    python emotionDetection.py
+    cd demos
+```
+## Ejecute ña demo de su elección:
+```bash
+    python <archivo que desea ejecutar>.py
 ```
