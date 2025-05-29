@@ -42,8 +42,8 @@ EMOTION-DETECTOR/
 
 Se recomienda crear **dos entornos virtuales separados**:
 
-- Uno para los modelos basados en **DeepFace**
-- Otro para la **CNN casera**
+- Uno para los modelos basados en **DeepFace** los cuales son los scripts python dentro de la carpeta demos que inician con el prefijo df_
+- Otro para la **CNN casera** la cual es un script python dentro de la carpeta demos que inicia con el prefijo cnn_
 
 ---
 
