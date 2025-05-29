@@ -74,7 +74,7 @@ source <nombre_del_entorno>/bin/activate
 **Para modelos basados en DeepFace:**
 
 ```bash
-pip install -r DRequirements.txt
+pip install -r DFrequirements.txt
 ```
 **Para modelos basados en CNN:**
 
