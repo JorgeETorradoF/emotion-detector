@@ -3,12 +3,12 @@ from tensorflow.keras.models import model_from_json
 import numpy as np
 
 
-json_file = open("emotiondetector.json", "r")
+json_file = open("demos\emotiondetector.json", "r")
 model_json = json_file.read()
 json_file.close()
 model = model_from_json(model_json)
 
-model.load_weights("CNN_casera.h5")
+model.load_weights("demos\CNN_casera.h5")
 
 
 haar_file = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'

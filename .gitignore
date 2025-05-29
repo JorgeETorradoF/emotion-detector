@@ -3,3 +3,5 @@ deepface/
 Data/
 deepface_finetuning/
 deepfaceEnv/
+.venv/
+venv/

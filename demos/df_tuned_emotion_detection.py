@@ -5,7 +5,7 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from mtcnn import MTCNN
 
 # Cargar el modelo entrenado
-model = load_model("best_tuned_model.h5")
+model = load_model("demos/best_tuned_model.h5")
 
 # Las clases deben coincidir con las usadas al entrenar
 class_labels = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
