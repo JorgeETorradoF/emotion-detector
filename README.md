@@ -76,7 +76,11 @@ source <nombre_del_entorno>/bin/activate
 ```bash
 pip install -r DRequirements.txt
 ```
+**Para modelos basados en CNN:**
 
+```bash
+pip install -r requirements.txt
+```
 ---
 
 ## 🚀 Ejecución
